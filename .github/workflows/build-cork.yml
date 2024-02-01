@@ -12,46 +12,26 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
 
-      - name: Set up Xcode
-        uses: actions/setup-xcode@v2
-        with:
-          xcode-version: '14.2.0'  # Dostosuj wersję Xcode do dostępnej na GitHub Actions.
+    - name: Set up Xcode
+      uses: actions/setup-xcode@v2
+      with:
+        xcode-version: '14.2.0'
 
-      - name: Build Cork
-        uses: xcode-actions/xcode@v5
-        with:
-          actions: build
-          scheme: Cork
-          sdk: macosx
-          configuration: Release
-          destination: platform=macOS
-          xcodebuildargs: ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
-
-      - name: Archive Cork
-        uses: xcode-actions/xcode@v5
-        with:
-          actions: archive
-          scheme: Cork
-          sdk: macosx
-          configuration: Release
-          archivePath: ./build/Cork.xcarchive
-          xcodebuildargs: CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
-
-      - name: Export Cork App
-        uses: xcode-actions/xcode@v5
-        with:
-          actions: export
-          archivePath: ./build/Cork.xcarchive
-          exportOptionsPlist: ExportOptions.plist
-          exportPath: ./build
-
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: CorkApp
-          path: ./build/Cork.app
+    - name: Build Cork
+      run: |
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
+    - name: Archive Cork
+      run: |
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
+    - name: Export Cork App
+      run: |
+        xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: CorkApp
+        path: ./build/Cork.app
