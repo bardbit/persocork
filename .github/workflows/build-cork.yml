@@ -1,4 +1,4 @@
-name: Build Cork for macOS
+name: Usuń błędy w Cork
 
 on:
   push:
@@ -11,13 +11,16 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies
+      - name: Usuń plik CMakeCache.txt
         run: |
-          brew install cmake
-          brew install boost
-      - name: Build Cork
+          rm -rf CMakeCache.txt
+      - name: Utwórz nowy katalog budowania
         run: |
           mkdir build
           cd build
+      - name: Uruchom CMake
+        run: |
           cmake ..
+      - name: Skompiluj Cork
+        run: |
           make
