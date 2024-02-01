@@ -12,15 +12,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
-        repository: 'bardbit/persocork'
         submodules: true
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '13.0'
+        xcode-version: '13.4.1'
 
     - name: Build Cork
       run: |
@@ -32,9 +31,9 @@ jobs:
 
     - name: Export Cork App
       run: |
-        xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build -allowProvisioningUpdates
+        xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
       env:
-        XCODE_DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
+        XCODE_DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v2
