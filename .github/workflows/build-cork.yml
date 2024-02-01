@@ -23,7 +23,7 @@ jobs:
 
     - name: Build Cork
       run: |
-        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
     - name: Archive Cork
       run: |
@@ -32,8 +32,6 @@ jobs:
     - name: Export Cork App
       run: |
         xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
-      env:
-        XCODE_DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v2
