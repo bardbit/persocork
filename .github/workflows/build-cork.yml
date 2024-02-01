@@ -1,4 +1,4 @@
-name: Build Cork on macOS with Homebrew
+name: Budowa Cork na macOS
 
 on:
   push:
@@ -8,40 +8,35 @@ on:
 
 jobs:
   build:
-    name: Build Cork
+    name: Budowa Cork
     runs-on: macos-latest
 
     steps:
-    - name: Checkout code
+    - name: Pobierz kod
       uses: actions/checkout@v2
       with:
         ref: main
         submodules: true
+        --node-version: 20
 
-    - name: Install Homebrew
-      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    - name: Install Xcode
-      run: brew install xcode
-
-    - name: Set up Node.js
+    - name: Skonfiguruj Node.js
       uses: actions/setup-node@v2
       with:
         node-version: 20
 
-    - name: Install Cork dependencies
-      run: npm install
+    - name: Zbuduj Cork
+      run: |
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
-    - name: Build Cork
-      run: xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS=""
+    - name: Archiwizuj Cork
+      run: |
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
-    - name: Archive Cork
-      run: xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS=""
+    - name: Eksportuj aplikację Cork
+      run: |
+        xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
 
-    - name: Export Cork App
-      run: xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
-
-    - name: Archive build artifacts
+    - name: Archiwizuj artefakty budowania
       uses: actions/upload-artifact@v2
       with:
         name: CorkApp
