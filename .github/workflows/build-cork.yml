@@ -18,8 +18,10 @@ jobs:
         ref: main
         submodules: true
 
-    - name: Install Xcode
-      uses: actions/setup-xcode@v2
+    - name: Install Node.js
+      uses: actions/download-artifact@v2
+      with:
+        name: node-v20
 
     - name: Build Cork
       run: |
