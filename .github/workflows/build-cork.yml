@@ -25,11 +25,11 @@ jobs:
 
     - name: Build Cork
       run: |
-        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED=NO
 
     - name: Archive Cork
       run: |
-        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
+        xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED=NO
 
     - name: Export Cork App
       run: |
