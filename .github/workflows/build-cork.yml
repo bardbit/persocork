@@ -12,17 +12,16 @@ jobs:
     runs-on: macos-latest
 
     steps:
+    - name: Install Node.js 20
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         ref: main
         submodules: true
-        node-version: 20
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 20
 
     - name: Build Cork
       run: |
