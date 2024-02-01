@@ -1,4 +1,4 @@
-name: Budowa Cork na macOS
+name: Build Cork on macOS
 
 on:
   push:
@@ -8,35 +8,35 @@ on:
 
 jobs:
   build:
-    name: Budowa Cork
+    name: Build Cork
     runs-on: macos-latest
 
     steps:
-    - name: Pobierz kod
+    - name: Checkout code
       uses: actions/checkout@v2
       with:
         ref: main
         submodules: true
-        --node-version: 20
+        node-version: 20
 
-    - name: Skonfiguruj Node.js
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: 20
 
-    - name: Zbuduj Cork
+    - name: Build Cork
       run: |
         xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx build ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
-    - name: Archiwizuj Cork
+    - name: Archive Cork
       run: |
         xcodebuild -project Cork.xcodeproj -scheme Cork -configuration Release -sdk macosx archive -archivePath ./build/Cork.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED="NO"
 
-    - name: Eksportuj aplikację Cork
+    - name: Export Cork App
       run: |
         xcodebuild -exportArchive -archivePath ./build/Cork.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
 
-    - name: Archiwizuj artefakty budowania
+    - name: Archive build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: CorkApp
