@@ -1,24 +1,27 @@
-name: Build Cork for macOS
+name: Build
 
 on:
-    push:
-        branches: [ main ]
-    pull_request:
-        branches: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
+
     runs-on: macos-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          brew install cmake
-          brew install boost
-      - name: Build Cork
-        run: |
-          mkdir build
-          cd build
-          cmake ../
-          make
-        shell: /bin/bash -e {0}
+    - uses: actions/checkout@v2
+
+    - name: Set Xcode version
+      run: sudo xcode-select -switch /Applications/Xcode_14.2.0.app
+
+    - name: Install dependencies
+      run: |
+        brew install glfw3
+        brew install glew
+
+    - name: Build Project
+      run: |
+        xcodebuild -project Cork.xcodeproj -alltargets -configuration Release build
